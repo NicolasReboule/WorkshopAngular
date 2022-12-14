@@ -426,6 +426,28 @@ ng g c {{YourComponentName}}
 ## ngOnInit
 <br>
 
+### La méthode *ngOnInit* est une méthode propre à Angular et permet d'executer du code à la création d'un composant.
+### Vous me direz peut-être qu'il existe déjà un constructeur pour cela mais il y a une différence. La méthode *ngOnInit* s'execute après le constructeur quand le composant a fini d'être créer.
+### C'est pourquoi, généralement, on ne fait qu'initialiser des attributs dans le constructeur et qu'on fait le reste dans *ngOnInit*.
+<br>
+
+### Voici comment on utiliserait *ngOnInit* dans *products.component.ts*:
+<br>
+
+![ngOnInit](/assets/ngOnInit.png)
+
+<br>
+
+### Jusqu'à maintenant on utilisait un tableaux de produit fait à la main sauf que ce n'est pas pratique si l'on veut ajouter des produits. Vous allez devoir lire le fichier *products.csv* et le parser pour créer le tableau de produits au lancement du composant.
+<br>
+
+### Cela devrait ressembler à ça:
+<br>
+
+![products csv]()
+
+<br>
+
 ---
 <br>
 
