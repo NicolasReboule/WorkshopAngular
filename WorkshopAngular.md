@@ -257,7 +257,7 @@ ng g c {{YourComponentName}}
 
 ```
 
-{ path: '{{YourPath}}',  component: {{YourComponent}}}
+{ path: '{{YourPath}}',  component: {{YourComponent}} }
 
 ```
 <br>
@@ -423,47 +423,205 @@ ng g c {{YourComponentName}}
 ---
 <br>
 
-## ngOnInit
+## ViewChild & ViewChildren
 <br>
 
-### La méthode *ngOnInit* est une méthode propre à Angular et permet d'executer du code à la création d'un composant.
-### Vous me direz peut-être qu'il existe déjà un constructeur pour cela mais il y a une différence. La méthode *ngOnInit* s'execute après le constructeur quand le composant a fini d'être créer.
-### C'est pourquoi, généralement, on ne fait qu'initialiser des attributs dans le constructeur et qu'on fait le reste dans *ngOnInit*.
+### [ViewChild](https://angular.io/api/core/ViewChild) et [ViewChildren](https://angular.io/api/core/ViewChildren) sont des décorateurs permettant respectivement de récupérer une ou plusieurs [views](https://angular.io/guide/glossary#view), grâce au nom d'un composants, d'une directive ou d'une *template reference variable*, que nous verrons plus tard, et encore bien d'autre.
+<br>
+
+### Imaginons qu'en plus d'afficher notre liste de produit nous devions aussi afficher un produit seul. Nous allons donc créer un composant *product*. Il faudra donc modifer le **ProductComponentDisplayer** et le **ProductComponent** pour avoir le même affichage qu'auparavant.
+
+<br>
+
+### Maintenant il est tout a fait possible que nous ayons besoin de modifier un des produits depuis le **ProductDisplayerComponant**, c'est là qu'intervient  [ViewChild](https://angular.io/api/core/ViewChild) et [ViewChildren](https://angular.io/api/core/ViewChildren).
+
+<br>
+
+### Par exemple si l'on voulait récupérer la view d'un de nos **ProductComponent**, on le ferait ainsi:
+<br>
+
+![viewChildren](/assets/viewChildren.png)
+<br>
+
+
+### Grâce à cela nous avons une liste de tous les **ProductComponent** et pouvons accèder à leur attributs.
+
+<br>
+
+---
+<br>
+
+## Cycle de vie des composants
+
+<br>
+
+### Les composants angular possèdent ce qu'on appelle un cycle de vie, qui commence quand le composant est instancié et se termine quand il est détruit. Lors de ce cycle de vie, le composant appelle plusieurs méthodes appellées [*lifecycle hook methods*](https://angular.io/guide/lifecycle-hooks#lifecycle-event-sequence) qui permettent d'effectuer des actions tous au long du cycle de vie du composant.
+
+### Ces méthodes peuvent être très utiles pour faire des actions spécifiques à moment précis.
+<br>
+
+### Par exemple, la méthode *ngOnInit* est une méthode propre à Angular et permet d'executer du code à la création d'un composant.
+### Vous me direz peut-être qu'il existe déjà un constructeur pour cela mais il y a une différence. La méthode *ngOnInit* s'execute après le constructeur quand le composant a fini d'être construit.
+<br>
+
+### Imaginez que votre composant ait besoin besoin de faire une requête HTTP à votre serveur pour afficher certaines informations. Les composants doivent être simple et sans danger à construire, vous ne pouvez donc pas faire une requête dans le constructeur car elle pourrait échouer. C'est là qu'intervient *ngOnInit* qui s'execute peu après le constructeur et qui peut contenir du code plus important et "dangereux".
 <br>
 
 ### Voici comment on utiliserait *ngOnInit* dans *products.component.ts*:
 <br>
 
 ![ngOnInit](/assets/ngOnInit.png)
+<br>
+
+### Maintenant que vous connaissez le cycle de vie des composants et ViewChild et ViewChildren vous devriez être capable de modifier **ProductDisplayerComponent** afin que s'il ne reste qu'un seul exemplaire d'un produit il soit affiché en rouge (sans erreur console bien sûr).
 
 <br>
 
-### Jusqu'à maintenant on utilisait un tableaux de produit fait à la main sauf que ce n'est pas pratique si l'on veut ajouter des produits. Vous allez devoir lire le fichier *products.csv* et le parser pour créer le tableau de produits au lancement du composant.
+![redproduct](/assets/redproduct.png)
 <br>
 
-### Cela devrait ressembler à ça:
+### N'oubliez pas aussi de faire en sorte que, quand on clique pour réduire le stock jusqu'à 1, la couleur change bien.
+
 <br>
 
-![products csv]()
+### Il existe pleins d'autres [*lifecycle hook methods*](https://angular.io/guide/lifecycle-hooks#lifecycle-event-sequence) que je vous invite à voir car elles peuvent vraiment être très utiles. Mais attention, comme écrit dans la documentation Angular, certaines de ces méthodes sont appellées très souvent donc faites attention à ce que le code ne suit pas trop gourmant car cela pourrait impacter l'experience utilisateur.
 
 <br>
 
 ---
 <br>
 
-## ViewChild
+## Les *template reference variables*
+<br>
+
+### Les [*template reference variables*](https://angular.io/guide/template-reference-variables) permettent d'utiliser les données d'un *template* (une balise par exemple) dans un autre *template* et sont donc vos meilleurs amis pour faire des formulaires avec [ngForm](https://angular.io/api/forms/NgForm) et [ngModel](https://angular.io/api/forms/NgModel).
+<br>
+
+### Elles permettent aussi de récupérer un ou plusieurs éléments avec *ViewChild* et *ViewChildren* vus précédemment.
+<br>
+
+### Pour les utiliser il suffit d'ajouter cette directive sur une de vos balises HTML:
+<br>
+
+```
+
+#{{YourVariableName}}
+
+```
+
+### Je ne couvrirai pas en détail comment créer un formulaire car il existe plusieurs manières différentes d'en créer et tout dépend de ce dont vous avez besoin.
+<br>
+
+### Cependant je vous invite à regarder les [guides](https://angular.io/guide/forms-overview) de la documentation Angular à ce sujet et/ou la documentation de l'API d'[*angular/forms*](https://angular.io/api/forms).
+
 <br>
 
 ---
 <br>
 
-## Les directives
+## Content Projecting
+<br>
+
+### Le [*content projecting*](https://angular.io/guide/content-projection) permet d'insérer de nouveaux élément à l'intérieur d'un composant depuis un autre composant.
+<br>
+
+### Ceci peut s'avérer très utiles afin de créer des composants très flexibles comme des pop-ups ou des cartes.
+<br>
+
+### Créez un composant *card* et faites le "squelette" de cette dernière et ajoutez du css pour rendre tout ça magnifique.
+
+### Une fois le squelette terminé, il suffit d'ajouter la balise *ng-content* à l'endroit où vous voulez ajouter les éléments à l'intérieur de votre composant.
+<br>
+
+![ngcontent](/assets/ngcontent.png)
+
+
+### Ajoutez trois cartes vides dans votre **HomeComponent**.
+<br>
+
+### Ensuite, ajoutez votre contenu entre le balise du sélecteur de votre composant et vous pourrez faire de "jolies" cartes facilement customisables.
+<br>
+
+![projection](/assets/projection.png)
+
+<br>
+
+![cards](/assets/cards.png)
+
+<br>
+
+---
+<br>
+
+## Les *directives*
+<br>
+
+### Il existe plusieurs types de directives :
+
+- ### Les [attribute directives](https://angular.io/guide/attribute-directives) qui changent l'apparence et le comportement des composants Angular et des éléments du [DOM](https://developer.mozilla.org/fr/docs/Glossary/DOM)
+- ### Les [structural directives](https://angular.io/guide/structural-directives) qui change la dispostion du [DOM](https://developer.mozilla.org/fr/docs/Glossary/DOM) en ajoutant ou enlevant des éléments à ce dernier.
+
+### Les [built-in directives](https://angular.io/guide/built-in-directives) sont des directives (*attribute* ou *structural*) déjà existante dans Angular telles que **ngIf* et **ngFor* qui sont très utiles. Je vous invite donc à vous renseigner dessus ces dernières.
+
+### Vous pouvez créez vos propres directives avec la commande suivante:
+<br>
+
+```
+
+ng generate directive {{YourDirectiveName}}
+
+```
+
+### ou en abrévié:
+<br>
+
+```
+
+ng g d {{YourDirectiveName}}
+
+```
+<br>
+
+### Pour utiliser une directive il suffit d'ajouter le nom de la directive sur la balise HTML de votre choix.
+<br>
+
+### Comme les formulaires, l'implémentation des directives dépendent de ce que vous voulez faire, donc je ne couvrirai pas ce point.
+<br>
+
+### Il existe par contre de très bon exemple pour implémenter une directive simple sur la documentation Angular pour les deux types de directives.
+
+### Je vous invite donc à cliquer :
+
+- ### [ici](https://angular.io/guide/attribute-directives#building-an-attribute-directive) pour l'exemple sur les *attribute directives*
+- ### [ici](https://angular.io/guide/structural-directives#creating-a-structural-directive) pour l'exemple sur les *structural directives*
+
+<br>
+
+---
+<br>
+
+## Les *services*
+<br>
+
+### Cette section n'est pas terminée mais n'hésitez pas regarder les [services](https://angular.io/tutorial/tour-of-heroes/toh-pt4) sur la documentation Angular.
+<br>
+
+---
+<br>
+
+## Les *feature modules*
+<br>
+
+### Cette section n'est pas terminée mais n'hésitez pas regarder les [feature modules](https://angular.io/guide/feature-modules) sur la documentation Angular.
 <br>
 
 ---
 <br>
 
 ## Merci
+<br>
+
+### Les trois dernières sections ne sont pas terminées mais sont très importantes si vous comptez créer un vraie application afin d'avoir une bonne organisation de votre code et de votre projet.
 <br>
 
 ### C'est la fin de ce workshop, j'espère que vous aurez apprécié et que cela vous sera utile.
